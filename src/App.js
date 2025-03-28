@@ -1,19 +1,27 @@
 import './App.css';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import Projects from './pages/Projects';
 
-function App() {
+function Home() {
   return (
     <div className="App">
-
       <header className="header">
-        <h1>Your Name</h1>
+        <h1>David Job</h1>
         <p className="tagline">Web Developer & Designer</p>
       </header>
+
+      <div className="media">
+        <div className="media-content">
+          <h1>Media</h1>
+          <img src="/game.png" alt="game"/>
+        </div>
+      </div>
 
       <main className="main-content">
         <section className="about-section">
           <h2>About Me</h2>
           <p>
-            Hello! I'm [Your Name], a passionate web developer with a keen interest in creating
+            Hello! I'm David Job, a passionate web developer with a keen interest in creating
             beautiful and functional web applications. I love turning complex problems into simple,
             beautiful, and intuitive solutions.
           </p>
@@ -80,6 +88,62 @@ function App() {
         <p>© 2024 Your Name. All rights reserved.</p>
       </footer>
     </div>
+  );
+}
+
+function Navigation() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const pages = [
+    { path: '/', label: 'Home' },
+    { path: '/projects', label: 'Projects' }
+  ];
+  
+  const currentIndex = pages.findIndex(page => page.path === location.pathname);
+  const prevPage = currentIndex > 0 ? pages[currentIndex - 1] : null;
+  const nextPage = currentIndex < pages.length - 1 ? pages[currentIndex + 1] : null;
+
+  return (
+    <nav className="navigation">
+      <button 
+        className="nav-button" 
+        onClick={() => prevPage && navigate(prevPage.path)}
+        disabled={!prevPage}
+      >
+        Previous
+      </button>
+      {pages.map(page => {
+        const isActive = location.pathname === page.path;
+        return (
+          <Link
+            key={page.path}
+            to={page.path}
+            className={`nav-link ${isActive ? 'active' : ''}`}
+          >
+            {page.label}
+          </Link>
+        );
+      })}
+      <button 
+        className="nav-button" 
+        onClick={() => nextPage && navigate(nextPage.path)}
+        disabled={!nextPage}
+      >
+        Next
+      </button>
+    </nav>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/projects" element={<Projects />} />
+      </Routes>
+    </Router>
   );
 }
 
